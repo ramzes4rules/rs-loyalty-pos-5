@@ -2,7 +2,7 @@ package rsloyaltypos5
 
 import (
 	"fmt"
-	Cheque "github.com/ramzes4rules/rs.loyalty.pos.5/cheque"
+	Cheque "github.com/ramzes4rules/rs-loyalty-pos-5/cheque"
 	"testing"
 )
 

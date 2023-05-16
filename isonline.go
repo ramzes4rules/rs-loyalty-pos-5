@@ -12,6 +12,7 @@ type IsOnlineResponse struct {
 	Result  bool     `xml:"IsOnlineResult"`
 }
 
+// IsOnline checking the availability of the service RS.Loyalty.Store from the client side
 func (pos *RSLoyaltyPOS5) IsOnline() (*bool, error) {
 
 	var request = &IsOnlineRequest{Xmlns: "http://tempuri.org/"}

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func (cheque Cheque) Test() string {
+func (cheque *Cheque) Test() string {
 
 	// Заполняем атрибуты чека
 	cheque.XmlnsXsd = "http://www.w3.org/2001/XMLSchema"
@@ -31,7 +31,7 @@ func (cheque Cheque) Test() string {
 	cheque.Coupon = append(cheque.Coupon, Coupon{CouponNo: "9900003221"})
 
 	// Добавляем строки чека
-	var cl = ChequeLine{
+	var cl = Line{
 		ChequeLineNo:  1,
 		NoPayBonus:    false,
 		NoAddBonus:    false,
@@ -57,9 +57,9 @@ func (cheque Cheque) Test() string {
 		}}},
 		Coupon: []Coupon{{CouponNo: "9900000043212"}, {CouponNo: "9900000043211"}},
 	}
-	var cls []ChequeLine
+	var cls []Line
 	cls = append(cls, cl)
-	var clss ChequeLines
+	var clss Lines
 	clss.ChequeLines = cls
 	cheque.ChequeLines = clss
 

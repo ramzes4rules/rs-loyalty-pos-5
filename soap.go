@@ -52,7 +52,7 @@ func (pos *RSLoyaltyPOS5) soap(request any, method string, response any) error {
 	payload := strings.NewReader(text)
 
 	//
-	req, err := http.NewRequest("POST", pos.url, payload)
+	req, err := http.NewRequest("POST", pos.Url, payload)
 	if err != nil {
 		return fmt.Errorf("request creation failed: %v", err)
 	}
@@ -60,7 +60,7 @@ func (pos *RSLoyaltyPOS5) soap(request any, method string, response any) error {
 	req.Header.Add("soapAction", fmt.Sprintf("http://tempuri.org/IRSLoyaltyService/%s", method))
 	req.Header.Add("Content-Type", "text/xml; charset=utf-8")
 	//fmt.Println(b64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", pos.login, pos.password))))
-	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", b64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", pos.login, pos.password)))))
+	req.Header.Add("Authorization", fmt.Sprintf("Basic %s", b64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%s:%s", pos.Login, pos.Password)))))
 
 	res, err := client.Do(req)
 	if err != nil {

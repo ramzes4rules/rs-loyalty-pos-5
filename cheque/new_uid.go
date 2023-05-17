@@ -18,7 +18,7 @@ func NewUID(UidType UidType) string {
 
 	switch UidType {
 	case GUID:
-		var set = set1 + set2
+		var set = set1 + set3
 		var uid = ""
 
 		//rand.Seed(time.Now().UnixNano())

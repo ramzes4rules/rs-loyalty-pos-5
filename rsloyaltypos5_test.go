@@ -8,9 +8,9 @@ import (
 )
 
 var pos = RSLoyaltyPOS5{
-	url:      "http://afanasiy-test.retailloyalty.ru:8383/RSLoyaltyStoreService",
-	login:    "rsl_reserv",
-	password: "rsl_reserv",
+	Url:      "http://afanasiy-test.retailloyalty.ru:8383/RSLoyaltyStoreService",
+	Login:    "rsl_reserv",
+	Password: "rsl_reserv",
 }
 var ValidCard = "7963101205527879"
 var InvalidCard = "1234567890"

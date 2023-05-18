@@ -6,8 +6,8 @@ import (
 )
 
 func (cheque *Cheque) Xml() string {
-	//var response, err = xml.MarshalIndent(cheque, "", "   ")
-	var response, err = xml.Marshal(cheque)
+	var response, err = xml.MarshalIndent(cheque, "", "   ")
+	//var response, err = xml.Marshal(cheque)
 	if err != nil {
 		fmt.Println(err)
 		return ""

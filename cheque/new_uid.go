@@ -7,7 +7,8 @@ import (
 type UidType string
 
 const (
-	GUID UidType = "GUID"
+	GUID   UidType = "GUID"
+	Number UidType = "Number"
 )
 
 func NewUID(UidType UidType) string {
@@ -20,10 +21,6 @@ func NewUID(UidType UidType) string {
 	case GUID:
 		var set = set1 + set3
 		var uid = ""
-
-		//rand.Seed(time.Now().UnixNano())
-		//06B71CCC-FDB7-46AE-AE6C-5F49380F1CFA
-
 		for i := 1; i <= 8; i++ {
 			uid += string(set[rand.Intn(len(set)-1)])
 		}
@@ -43,8 +40,15 @@ func NewUID(UidType UidType) string {
 		for i := 1; i <= 12; i++ {
 			uid += string(set[rand.Intn(len(set)-1)])
 		}
-
 		return uid
+
+	case Number:
+		var number = ""
+		for i := 1; i <= 5; i++ {
+			number += string(set1[rand.Intn(len(set1)-1)])
+		}
+		return number
+
 	default:
 		return ""
 	}

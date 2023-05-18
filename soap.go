@@ -89,7 +89,7 @@ func (pos *RSLoyaltyPOS5) soap(request any, method string, response any) error {
 		if err != nil {
 			return fmt.Errorf("fault unmarshalling failed: %v", err)
 		}
-		return fmt.Errorf("got error response: %v", fault.Faultstring)
+		return fmt.Errorf("%v", fault.Faultstring)
 	default:
 		err = xml.Unmarshal([]byte(r), &response)
 		if err != nil {

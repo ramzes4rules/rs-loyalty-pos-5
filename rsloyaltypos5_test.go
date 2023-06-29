@@ -93,7 +93,7 @@ func TestRSLoyaltyPOS5_GetMessages(t *testing.T) {
 	// print result
 	if len(msgs.Messages) > 0 {
 		fmt.Printf("\tGot messages: %d\n", len(msgs.Messages))
-		fmt.Printf("\tMessageID%s\n", msgs.Messages[0].MessageID)
+		fmt.Printf("\tMessageID: %s\n", msgs.Messages[0].MessageID)
 	} else {
 		fmt.Printf("\tDon't got any messages\n")
 	}

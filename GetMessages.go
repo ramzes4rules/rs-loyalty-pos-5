@@ -60,10 +60,7 @@ func DecodeUTF16(b []byte) (string, error) {
 func (pos *RSLoyaltyPOS5) GetMessages(cheque string) (Messages2, error) {
 
 	// declare variables
-	var request = &GetMessagesRequest{
-		Xmlns:  "http://tempuri.org/",
-		Cheque: cheque,
-	}
+	var request = &GetMessagesRequest{Xmlns: "http://tempuri.org/", Cheque: cheque}
 	var response = &GetMessagesResponse{}
 
 	// exec request
@@ -71,15 +68,14 @@ func (pos *RSLoyaltyPOS5) GetMessages(cheque string) (Messages2, error) {
 
 	// check execution errors
 	if err != nil {
-		return Messages2{}, err
+		return Messages2{}, fmt.Errorf("failed to call 'GetMessages': %v\n\r", err)
 	}
-	//fmt.Printf("res: %s\n", response.GetMessagesResult)
 
 	//
 	var result = Messages2{}
 	err = xml.Unmarshal([]byte(strings.Replace(response.GetMessagesResult, "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "", -1)), &result)
 	if err != nil {
-		return Messages2{}, err
+		return Messages2{}, fmt.Errorf("failed to parse GetMessage response: %v", err)
 	}
 
 	return result, nil

@@ -49,8 +49,9 @@ func (pos *RSLoyaltyPOS5) soap(request any, method string, response any) error {
 		return fmt.Errorf("request marshaling failed: %v", err)
 	}
 	text := "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + string(req1)
+	//text = strings.Replace(text, "&amp;", "&", -1)
 	payload := strings.NewReader(text)
-
+	//fmt.Printf("%s\n", text)
 	//
 	req, err := http.NewRequest("POST", pos.Url, payload)
 	if err != nil {

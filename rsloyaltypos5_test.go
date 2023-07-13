@@ -8,9 +8,11 @@ import (
 )
 
 var pos = RSLoyaltyPOS5{
-	Url:      "http://afanasiy-test.retailloyalty.ru:8383/RSLoyaltyStoreService",
-	Login:    "rsl_reserv",
-	Password: "rsl_reserv",
+	Url: "http://afanasiy-test.retailloyalty.ru:8383/RSLoyaltyStoreService",
+	//Login:    "rsl_reserv",
+	Login: "00308301463784",
+	//Password: "rsl_reserv",
+	Password: "00308301463784",
 }
 var ValidCard = "7963101205527879"
 var InvalidCard = "1234567890"
@@ -43,8 +45,17 @@ func TestRSLoyaltyPOS5_IsCardValid(t *testing.T) {
 	fmt.Printf("\tIsCardValid: %t\n", *valid)
 }
 
+func TestRSLoyaltyPOS5_IsCouponValid(t *testing.T) {
+	valid, err := pos.IsCouponValid("9800200000043")
+	if err != nil {
+		t.Errorf("\tError: %v\n\r", err)
+		return
+	}
+	fmt.Printf("\tCoupon valid: %t\n\r", *valid)
+}
+
 func TestRSLoyaltyPOS5_GetCardBalance(t *testing.T) {
-	balance, err := pos.GetCardBalance(ValidCard)
+	balance, err := pos.GetCardBalance("8641212605463261")
 	if err != nil {
 		t.Errorf(err.Error())
 		return
@@ -80,21 +91,97 @@ func TestRSLoyaltyPOS5_GetDiscounts(t *testing.T) {
 
 func TestRSLoyaltyPOS5_GetMessages(t *testing.T) {
 	cheque := Cheque.New("1", time.Now())
-	cheque.AddDiscountCard("000001")
-	cheque.AddLine("49000123", 100.0, 2, []Cheque.Coupon{{CouponNo: "99001"}, {CouponNo: "99002"}})
-	cheque.AddLine("49000123", 200.0, 2, nil)
+	cheque.AddDiscountCard(ValidCard)
+	cheque.AddLine("49000123", 100.0, 2, nil)
+	cheque.AddLine("1442", 200.0, 2, nil)
 	cheque.AddLine("49000123", 300.0, 2, nil)
 
 	msgs, err := pos.GetMessages(cheque.Xml())
+
 	if err != nil {
 		t.Errorf(err.Error())
+		return
 	}
 
 	// print result
 	if len(msgs.Messages) > 0 {
 		fmt.Printf("\tGot messages: %d\n", len(msgs.Messages))
-		fmt.Printf("\tMessageID%s\n", msgs.Messages[0].MessageID)
+		fmt.Printf("\tMessageID: %s\n", msgs.Messages[0].MessageID)
 	} else {
 		fmt.Printf("\tDon't got any messages\n")
 	}
+}
+
+func TestRSLoyaltyPOS5_GetCardDiscountAmountString(t *testing.T) {
+	cheque := Cheque.New("1", time.Now())
+	cheque.AddDiscountCard("0000199000089")
+	cheque.AddLine("49000123", 100.0, 2, nil)
+	cheque.AddLine("1442", 200.0, 2, nil)
+	cheque.AddLine("15633", 300.0, 2, nil)
+
+	amountString, err := pos.GetCardDiscountAmountString("0000199000089", cheque.Xml())
+	if err != nil {
+		fmt.Printf("\tError: %v\n", err)
+		return
+	}
+	fmt.Printf("\tAmount=%s\n", amountString)
+}
+
+func TestRSLoyaltyPOS5_GetCardDiscountAmount(t *testing.T) {
+	cheque := Cheque.New("1", time.Now())
+	cheque.AddDiscountCard("0000199000089")
+	cheque.AddLine("49000123", 100.0, 2, nil)
+	cheque.AddLine("1442", 200.0, 2, nil)
+	cheque.AddLine("15633", 300.0, 2, nil)
+
+	//var tch = strings.Replace(cheque.Xml(), "\"", "&quot;", -1)
+	amountString, err := pos.GetCardDiscountAmount("0000199000089", cheque.Xml())
+	if err != nil {
+		fmt.Printf("\tError: %v\n", err)
+		return
+	}
+	fmt.Printf("\tAmount=%f\n", amountString)
+}
+
+func TestRSLoyaltyPOS5_SubtractBonus45(t *testing.T) {
+	cheque := Cheque.New("1", time.Now())
+	cheque.AddDiscountCard("8641212605463261")
+	cheque.AddLine("1442", 200.0, 2, nil)
+
+	subs, err := pos.SubtractBonus45("8641212605463261", 2, cheque.Xml())
+	if err != nil {
+		fmt.Printf("\tError: %v\n", err)
+		return
+	}
+	for _, line := range subs {
+		fmt.Printf("\tLine number: %d, amount: %f\n", line.ChequeLineNo, line.Amount)
+	}
+}
+
+func TestRSLoyaltyPOS5_CancelSubtractBonus(t *testing.T) {
+	cheque := Cheque.New("1", time.Now())
+	cheque.AddDiscountCard("8641212605463261")
+	cheque.AddLine("1442", 200.0, 2, nil)
+	err := pos.CancelSubtractBonus("8641212605463261", 2, cheque.Xml())
+	if err != nil {
+		fmt.Printf("\tError: %v\n\r", err)
+		return
+	}
+	fmt.Printf("\tSuccess!\n\r")
+}
+
+func TestRSLoyaltyPOS5_Accrual(t *testing.T) {
+	cheque := Cheque.New("1", time.Now())
+	cheque.AddDiscountCard("8641212605463261")
+	cheque.AddLine("1442", 200.0, 2, nil)
+
+	accrual, err := pos.Accrual(cheque.Xml())
+
+	if err != nil {
+		fmt.Printf("\tError: %v\n\r", err)
+		return
+	}
+
+	fmt.Printf("\tAccrual: %s\n\r", *accrual)
+
 }
